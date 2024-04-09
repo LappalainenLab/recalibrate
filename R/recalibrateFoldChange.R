@@ -5,7 +5,7 @@ recalibrateFoldChange <- function(df_de, tissue, vg, remove_NA = FALSE,
                           FC_col_name = 'log2FoldChange') {
 
   if (!is.element(tissue, colnames(vg)))
-    stop("Unknown tissue. You have to specify one GTEx tissue in 6-letter code")
+    stop("Unknown tissue. You have to specify one GTEx tissue in 6-letter code or use 'MEAN'.")
 
   #genes = row.names(vg)[which(!is.na(vg[,tissue]))]
   #vg_tissue = vg[which(!is.na(vg[,tissue])), tissue]
