@@ -1,5 +1,5 @@
 #' @export
-recalibrateFoldChange <- function(df_de, tissue, vg, remove_NA = FALSE,
+recalibrateFoldChange <- function(df_de, tissue, vg = vg, remove_NA = FALSE,
                                   sort_by = NA, add_vg = FALSE, variance_offset = 0,
                                   FC_col_name = "log2FoldChange") {
   if (!is.element(tissue, colnames(vg))) {
