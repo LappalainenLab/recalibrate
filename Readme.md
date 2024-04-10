@@ -14,14 +14,14 @@ relevant.
 While  we are working to publish this as a general R package, it is currently
 necessary to install this directly from Github.
 
-```{r}
+```r
 library(devtools)
 install_github("LappalainenLab/recalibrate")
 ```
 
 # Usage
 
-```{r}
+```r
 library(recalibrate)
 
 # given a data.frame df with column 'log2FoldChange' and row.names as Ensembl
