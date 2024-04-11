@@ -13,14 +13,14 @@ recalibrateFoldChange <- function(df_de, tissue = "MEAN", vg = vg, remove_NA = F
   vg_select <- vg[row.names(df_de), tissue]
   sdg_select <- sqrt(vg_select + variance_offset)
 
-  df_de$SDGcorrectedFC <- df_de[, FC_col_name] / sdg_select
+  df_de$recalibratedFC <- df_de[, FC_col_name] / sdg_select
 
   if (add_vg) {
     df_de$vg <- vg_select
   }
 
   if (remove_NA) {
-    df_de <- df_de[which(!is.na(df_de$SDGcorrectedFC)), ]
+    df_de <- df_de[which(!is.na(df_de$recalibratedFC)), ]
   }
 
   if (is.element(sort_by, colnames(df_de))) {
