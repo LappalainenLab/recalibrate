@@ -1,7 +1,10 @@
 #' @export
-recalibrateFoldChange <- function(df_de, tissue = "MEAN", vg = vg_ae, remove_NA = FALSE,
+recalibrateFoldChange <- function(df_de, tissue = "MEAN", vg = "vg_ae", remove_NA = FALSE,
                                   sort_by = NA, add_vg = FALSE, variance_offset = 0,
                                   FC_col_name = "log2FoldChange") {
+  if (vg == "vg_ae") {
+    vg = get("vg_ae") # via lazy-loading of the attached dataset
+  }
   if (!is.element(tissue, colnames(vg))) {
     stop("Unknown tissue. You have to specify one GTEx tissue in 6-letter code or use 'MEAN'.")
   }
