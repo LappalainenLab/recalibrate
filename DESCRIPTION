@@ -1,14 +1,14 @@
 Package: recalibrate
 Title: Package for gene expression fold change recalibration
 Version: 0.0.0.9000
-Authors@R: 
-    person("Philipp", "Rentzsch", "first.last@scilifelab.se",
-           role = c("aut", "cre"), comment = c(ORCID = "0000-0002-0413-7974"))
-    person("Aaron", "Kollotzek", role = c("aut"))
+Authors@R: c(
+    person("Philipp", "Rentzsch", email = "first.last@scilifelab.se",
+           role = c("aut", "cre"), comment = c(ORCID = "0000-0002-0413-7974")),
+    person("Aaron", "Kollotzek", role = c("aut")),
     person("Pejman", "Mohammadi", role = c("aut"),
-           comment = c(ORCID = "0000-0003-4457-8552"))
+           comment = c(ORCID = "0000-0003-4457-8552")),
     person("Tuuli", "Lappalainen", role = c("aut"),
-           comment = c(ORCID = "0000-0002-7746-8109"))
+           comment = c(ORCID = "0000-0002-7746-8109")))
 Description: This is a package for fold change recalibration. It adjusts log
     fold changes in gene expression as they are reported from any differential
     expression experiment by the genetic population variance of each gene.
