@@ -1,12 +1,12 @@
-#' Recalibrate expression fold changes
+#' Recalibrate gene expression fold changes
 #'
-#' @param df_de data.frame: contains differential expression per gene. Row names are
-#' Ensembl gene ids and one column contains the log fold change.
+#' @param df_de data.frame: contains differential expression per gene. Row names
+#' are Ensembl gene ids and one column contains the log fold change.
 #' @param vg data.frame: contains the V^G estimate per gene (rows) for one
-#' or multiple tissues (columns). Default = vg_ae, the allelic expression based
-#' V^G estimates calculated from GTEx v8.
+#' or multiple tissues (columns). Default = [vg_ae], the allelic expression
+#' based V^G estimates calculated from GTEx v8.
 #' @param tissue char: V^G tissue that is recalibrated against. Default V^G are
-#' generated for the GTEx tissues (in GTex 6-letter code) or MEAN (weighted
+#' generated for the GTEx tissues (in GTEx 6-letter code) or MEAN (weighted
 #' harmonic mean across tissues). Default = "MEAN".
 #' @param remove_NA bool: whether genes for which no V^G estimate exist should
 #' be removed from the final data.frame. Default = FALSE.
@@ -18,7 +18,7 @@
 #' = 0.
 #' @param FC_col_name char: column of df_de that contains the log fold change
 #' values that are recalibrated. Default = "log2FoldChange".
-#' @returns modified data.frame with added recalibrated fold changes.
+#' @returns A modified data.frame with added recalibrated fold changes.
 #' @examples
 #' df <- data.frame(log2FoldChange = c(-2.95, 1.03, 4.34),
 #'   padj = c(0, 1e-2, 1e-5),
