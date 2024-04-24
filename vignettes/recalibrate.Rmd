@@ -82,7 +82,85 @@ cor(abs(df[, c("log2FoldChange", "recalibratedFC")]),
 
 ## GO term enrichement comparison
 
-TODO
+The following is an analysis as we performed it in the manuscript that
+introduced recalibration. Based on the same dataset as above, it performs
+GO enrichment (using the `gprofiler2` package) of genes selected by nominal and
+recalibrated fold changes respectively. It then compares enrichment p-values
+between the two analysis, colored by wether those terms contain the strings
+'response' or 'regulation'.
+
+```{r, fig.height=4, fig.width=7}
+top_xgenes <- 2000
+
+# select a background set
+bg_genelist <- intersect(rownames(df), rownames(vg_ae))
+
+# only select significant genes
+df_sig <- subset(df, padj < 0.05)
+
+# select top genes by nominal and recalibrated FC
+nfc_order <- order(abs(df_sig$log2FoldChange), decreasing = T)
+rfc_order <- order(abs(df_sig$recalibratedFC), decreasing = T)
+nfc_genes <- rownames(df_sig)[nfc_order[1:top_xgenes]]
+rfc_genes <- rownames(df_sig)[rfc_order[1:top_xgenes]]
+
+# perform GO enrichment
+library(gprofiler2)
+enrichment <- function(gene.list, bglist){
+  gostres <- gost(query = gene.list, organism = "hsapiens", ordered_query = FALSE, 
+                  multi_query = FALSE, significant = TRUE, exclude_iea = FALSE, 
+                  measure_underrepresentation = FALSE, evcodes = FALSE, 
+                  user_threshold = 0.05, correction_method = "g_SCS", 
+                  domain_scope = "custom", custom_bg = bglist, 
+                  numeric_ns = "", sources = 'GO', as_short_link = FALSE)
+  gores <- as.data.frame(gostres$result[,c(3,11)])
+  rownames(gores) <- gores$term_name
+  return(gores)
+}
+gores <- enrichment(nfc_genes, bg_genelist)
+rfc_gores <- enrichment(rfc_genes, bg_genelist)
+
+# join enrichments
+gores$p_value_rfc = 1 # impute all non-hits from rfc
+for (term in row.names(rfc_gores)){
+  if (! term %in% row.names(gores)){ # add missing GO terms to nfc
+    gores[term, 'term_name'] = term
+    gores[term, 'p_value'] = 1
+  }
+  gores[term, 'p_value_rfc'] = rfc_gores[term, 'p_value']
+}
+rownames(gores) <- gores$term_name
+
+# match GO terms based on strings
+termAssociations=c('regulation', 'response')
+gores$association = 'other'
+for (term in row.names(gores)){
+  for (match in termAssociations){
+    if (grepl(match, term, fixed = T)){
+      if (gores[term, 'association'] == 'other')
+        gores[term, 'association'] = match
+      else
+        gores[term, 'association'] = paste(gores[term, 'association'] , match, sep = ' & ')
+    }
+  }
+}
+
+# plot GO term associations by method of gene selection
+plot.colors = c('regulation'="#0000FF",'regulation & response'="#990099",
+                'response'="#FF0000",'other'="#999999")
+ggplot(gores, aes(-log10(p_value), -log10(p_value_rfc), color=association)) +
+  geom_point() +
+  geom_abline(intercept = 0, slope = 1, linetype=2) + theme_minimal() +
+  scale_color_manual(name="GO Term association", values=plot.colors) +
+  scale_x_continuous(name="selected by nominal FC"~-log[10]~"p-value") + 
+  scale_y_continuous(name="selected by recalibrated FC"~-log[10]~"p-value") +
+  ggtitle(paste('GO enrichment of the top', top_xgenes, 'genes')) +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold"))
+```
+
+We notice that GO terms matching the string regulation are generally more
+enriched after recalibration, while GO terms that contain the string 'response'
+are more enriched before.
 
 # Acknowledgements
 
