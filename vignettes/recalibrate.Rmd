@@ -1,0 +1,109 @@
+---
+title: "Recalibrating gene expression fold changes"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Recalibrating gene expression fold changes}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Workflow
+
+```{r setup}
+library(recalibrate)
+```
+
+The basic recalibration workflow is very simple. A data.frame containing
+differential expression per gene (measured as log fold change) is adjusted
+using the variance in gene expression metric (V^G).
+
+## Input data
+
+The are two requirements for the input data.frame: The row names have to be
+Ensembl gene ids, and one of the columns must contain log fold changes.
+
+As an example, here we are using the first three rows of the Alasoo et al. 2018
+dataset of macrophages stimulated with IFNg, which can be downloaded from
+[zenodo](https://zenodo.org/records/839011)
+
+```{r}
+df <- data.frame(
+  log2FoldChange = c(0.304144565986564, 2.0260124809332, 2.50289598633734),
+  row.names = c("ENSG00000152213", "ENSG00000154642", "ENSG00000161929")
+)
+```
+
+## Recalibration
+
+The actual recalibration is then a single function call that returns the
+recalibrated fold changes in column `recalibratedFC` of the same data.frame.
+Note that the parameter `FC_col_name` needs to be adjusted if nominal fold
+changes are not stored in column `log2FoldChange` (DESeq2 default).
+
+```{r}
+recalibrateFoldChange(df)
+```
+
+# Follow-up analysis example
+
+As an example, here we use the Alasoo et al. 2018 dataset of macrophages
+stimulated with IFNg [downloaded from zenodo](https://zenodo.org/records/839011).
+
+```{r, include = FALSE}
+datafile <- "../../data/naive_vs_IFNg_DESeq2_fold_change.txt.gz"
+```
+```{r}
+library(ggplot2)
+df <- read.table(datafile, header = TRUE, row.names = "gene_id")
+df <- recalibrateFoldChange(df, remove_NA = TRUE)
+ggplot(data = df, aes(y = recalibratedFC, x = log2FoldChange)) +
+  theme_bw() +
+  geom_point(alpha = 0.5, size = 1.2) +
+  ylab(bquote("recalibrated fold change (log FC /" ~ sqrt(V^G) ~ ")")) +
+  xlab("nominal fold change (log FC)")
+```
+
+In our analyses, we generally find a high degree of correlation between nominal 
+and recalibrated fold changes.
+
+```{r}
+cor(abs(df[, c("log2FoldChange", "recalibratedFC")]),
+  method = "spearman",
+  use = "complete.obs"
+)
+```
+
+## GO term enrichement comparison
+
+TODO
+
+# Acknowledgements
+
+We would like to thank Sarah Kim-Hellmuth, Xiaoting Li, Ryan Collins,
+Sanna Gudmundsson, Paul Hoffman, Mariia Mineava, Kaushik Ram Ganapathy,
+and the current and former members of the Lappalainen Lab for helpful
+discussions and code sharing.
+
+# Funding
+
+This work was supported by funding from the European Research Council (ERC)
+under the European Union’s Horizon 2020 research and innovation programme
+(Grant agreement no. 101043238) and the National Human Genome Research Institute
+of the NIH (Grant no. R01GM140287).
+Part of the computations were enabled by resources provided by the Swedish
+National Infrastructure for Computing (SNIC) at UPPMAX partially funded by the
+Swedish Research Council through grant agreement no. 2018-05973.
+
+# Citation
+
+> Rentzsch P, Kollotzek A, Mohammadi P, Lappalainen T (2024)
+> Recalibrating differential gene expression by genetic dosage variance prioritizes functionally relevant genes.
+> *bioRxiv*,
+> [10.1101/2024.04.10.588830](https://doi.org/10.1101/2024.04.10.588830)
