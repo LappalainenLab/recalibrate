@@ -20,9 +20,11 @@
 #' values that are recalibrated. Default = "log2FoldChange".
 #' @returns A modified data.frame with added recalibrated fold changes.
 #' @examples
-#' df <- data.frame(log2FoldChange = c(-2.95, 1.03, 4.34),
+#' df <- data.frame(
+#'   log2FoldChange = c(-2.95, 1.03, 4.34),
 #'   padj = c(0, 1e-2, 1e-5),
-#'   row.names = c("ENSG00000000003", "ENSG00000000419", "ENSG00000000457"))
+#'   row.names = c("ENSG00000000003", "ENSG00000000419", "ENSG00000000457")
+#' )
 #'
 #' recalibrateFoldChange(df)
 #' recalibrateFoldChange(df, tissue = "NERVET", vg = vg_aeml)
