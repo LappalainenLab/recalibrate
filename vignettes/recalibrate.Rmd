@@ -54,14 +54,25 @@ recalibrateFoldChange(df)
 # Follow-up analysis example
 
 As an example, here we use the Alasoo et al. 2018 dataset of macrophages
-stimulated with IFNg [downloaded from zenodo](https://zenodo.org/records/839011).
+stimulated with IFNg. The file can be downloaded from zenodo, as examplified in
+the following via a tempoary file.
 
-```{r, include = FALSE}
-datafile <- "../../data/naive_vs_IFNg_DESeq2_fold_change.txt.gz"
+```{r}
+# Download the file from the URL and save it to the temporary file
+library(utils)
+url <- "https://zenodo.org/records/839011/files/naive_vs_IFNg_DESeq2_fold_change.txt.gz"
+temp_file_path <- tempfile(fileext = ".txt.gz")
+download.file(url, destfile = temp_file_path, mode = "wb")
+df <- read.table(temp_file_path, header = TRUE, row.names = "gene_id")
+# Delete the temporary file
+unlink(temp_file_path)
 ```
+
+Here, we are comparing nominal and recalibrated fold changes per gene:
+
 ```{r}
 library(ggplot2)
-df <- read.table(datafile, header = TRUE, row.names = "gene_id")
+
 df <- recalibrateFoldChange(df, remove_NA = TRUE)
 ggplot(data = df, aes(y = recalibratedFC, x = log2FoldChange)) +
   theme_bw() +

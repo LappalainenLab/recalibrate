@@ -20,7 +20,10 @@ Depends:
     R (>= 2.10)
 LazyData: true
 LazyDataCompression: xz
-Suggests: 
+Suggests:
+    ggplot2,
+    gprofiler2,
+    utils,
     knitr,
     rmarkdown
 VignetteBuilder: knitr
