@@ -182,7 +182,7 @@ are more enriched before.
 # Acknowledgements
 
 We would like to thank Sarah Kim-Hellmuth, Xiaoting Li, Ryan Collins,
-Sanna Gudmundsson, Paul Hoffman, Mariia Mineava, Kaushik Ram Ganapathy,
+Sanna Gudmundsson, Paul Hoffman, Mariia Minaeva, Kaushik Ram Ganapathy,
 and the current and former members of the Lappalainen Lab for helpful
 discussions and code sharing.
 
