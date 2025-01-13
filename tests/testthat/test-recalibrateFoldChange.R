@@ -10,7 +10,7 @@ test_that("basic recalibration", {
   expect_equal(colnames(df), c("log2FoldChange", "padj", "recalibratedFC"))
   expect_equal(rownames(df), c("ENSG00000000003", "ENSG00000000419", "ENSG00000000457"))
   expect_equal(nrow(df), 3)
-  expect_equal(df$recalibratedFC, c(NA, -10.9200949, 86.10009577))
+  expect_equal(df$recalibratedFC, c(NA, -10.39488038, 49.14477305))
 })
 
 test_that("different VG versions", {
@@ -21,15 +21,17 @@ test_that("different VG versions", {
   )
 
   # recalibration with ML based VG
-  df <- recalibrateFoldChange(df_input, vg = vg_aeml)
-  expect_equal(df$recalibratedFC, c(62.07967991, -10.9200949, 86.10009577))
+  df <- recalibrateFoldChange(df_input, vg = vg_ae)
+  expect_equal(df$recalibratedFC, c(NA, -10.9200949, 86.1000958))
 
   # tissue specific recalibration
   df <- recalibrateFoldChange(df_input, tissue = "WHLBLD")
-  expect_equal(df$recalibratedFC, c(NA, NA, 29.12673))
+  expect_equal(df$recalibratedFC, c(NA, -3.81962328, 25.79571630))
 
   # tissue that does not exist
   expect_error(recalibrateFoldChange(df_input, tissue = "BLOOD"))
+  # VG that does not exist
+  expect_error(recalibrateFoldChange(df_input, vg = 'vgo'))
 })
 
 test_that("removing genes", {
@@ -67,7 +69,7 @@ test_that("column operations", {
   # add VG estimates in results
   df <- recalibrateFoldChange(df_input, add_vg = TRUE)
   expect_equal(colnames(df), c("log2FoldChange", "padj", "recalibratedFC", "vg"))
-  expect_equal(df$vg, c(NA, 0.00889655, 0.00254081))
+  expect_equal(df$vg, c(NA, 0.009818281, 0.007798746278))
 })
 
 test_that("variance offset", {
@@ -78,7 +80,7 @@ test_that("variance offset", {
   )
 
   df <- recalibrateFoldChange(df_input, variance_offset = 0.01)
-  expect_equal(df$recalibratedFC, c(NA, -7.492831, 38.754928))
+  expect_equal(df$recalibratedFC, c(NA, -7.316514, 32.530821))
 })
 
 test_that("different fold change column name", {
@@ -89,5 +91,5 @@ test_that("different fold change column name", {
   )
   df <- recalibrateFoldChange(df_input3, FC_col_name = "FC")
   expect_equal(colnames(df), c("FC", "padj", "recalibratedFC"))
-  expect_equal(df$recalibratedFC, c(NA, -10.9200949, 86.10009577))
+  expect_equal(df$recalibratedFC, c(NA, -10.39488038,  49.14477305))
 })

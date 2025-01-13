@@ -81,7 +81,7 @@ ggplot(data = df, aes(y = recalibratedFC, x = log2FoldChange)) +
   xlab("nominal fold change (log FC)")
 ```
 
-In our analyses, we generally find a high degree of correlation between nominal 
+In our analyses, we generally find some degree of correlation between nominal
 and recalibrated fold changes.
 
 ```{r}
@@ -104,7 +104,7 @@ between the two analysis, colored by wether those terms contain the strings
 top_xgenes <- 2000
 
 # select a background set
-bg_genelist <- intersect(rownames(df), rownames(vg_ae))
+bg_genelist <- intersect(rownames(df), rownames(vg_h))
 
 # only select significant genes
 df_sig <- subset(df, padj < 0.05)
@@ -182,7 +182,7 @@ are more enriched before.
 # Acknowledgements
 
 We would like to thank Sarah Kim-Hellmuth, Xiaoting Li, Ryan Collins,
-Sanna Gudmundsson, Paul Hoffman, Mariia Minaeva, Kaushik Ram Ganapathy,
+Sanna Gudmundsson, Paul Hoffman, Mariia Minaeva,
 and the current and former members of the Lappalainen Lab for helpful
 discussions and code sharing.
 

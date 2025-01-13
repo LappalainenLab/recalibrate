@@ -3,7 +3,7 @@
 #' @param df_de data.frame: contains differential expression per gene. Row names
 #' are Ensembl gene ids and one column contains the log fold change.
 #' @param vg data.frame: contains the V^G estimate per gene (rows) for one
-#' or multiple tissues (columns). Default = [vg_ae], the allelic expression
+#' or multiple tissues (columns). Default = [vg_h], the haplotype expression
 #' based V^G estimates calculated from GTEx v8.
 #' @param tissue char: V^G tissue that is recalibrated against. Default V^G are
 #' generated for the GTEx tissues (in GTEx 6-letter code) or MEAN (weighted
@@ -27,15 +27,24 @@
 #' )
 #'
 #' recalibrateFoldChange(df)
-#' recalibrateFoldChange(df, tissue = "NERVET", vg = vg_aeml)
+#' recalibrateFoldChange(df, tissue = "NERVET", vg = vg_hi)
 #' recalibrateFoldChange(df, sort_by = "padj", add_vg = TRUE)
 #' @export
-recalibrateFoldChange <- function(df_de, vg = "vg_ae", tissue = "MEAN", remove_NA = FALSE,
+recalibrateFoldChange <- function(df_de, vg = "vg_h", tissue = "MEAN", remove_NA = FALSE,
                                   sort_by = NA, add_vg = FALSE, variance_offset = 0,
                                   FC_col_name = "log2FoldChange") {
-  if (is.character(vg) && vg == "vg_ae") {
-    vg <- get("vg_ae") # via lazy-loading of the attached dataset
+  if (is.character(vg)) {
+    if (vg == "vg_h") {
+      vg <- get("vg_h") # via lazy-loading of the attached dataset
+    } else if (vg == "vg_hi") {
+      vg <- get("vg_hi") # via lazy-loading of the attached dataset
+    } else if (vg == "vg_ae") {
+      vg <- get("vg_ae") # via lazy-loading of the attached dataset
+    } else {
+      stop("Unknown VG. Currently only 'vg_h', 'vg_hi' & 'vg_ae' are supported")
+    }
   }
+
   if (!is.element(tissue, colnames(vg))) {
     stop("Unknown tissue. You have to specify one GTEx tissue in 6-letter code or use 'MEAN'.")
   }
