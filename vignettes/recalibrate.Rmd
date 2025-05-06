@@ -91,7 +91,7 @@ cor(abs(df[, c("log2FoldChange", "recalibratedFC")]),
 )
 ```
 
-## GO term enrichement comparison
+## GO term enrichment comparison
 
 The following is an analysis as we performed it in the manuscript that
 introduced recalibration. Based on the same dataset as above, it performs
@@ -153,7 +153,8 @@ for (term in row.names(gores)) {
       if (gores[term, "association"] == "other") {
         gores[term, "association"] <- match
       } else {
-        gores[term, "association"] <- paste(gores[term, "association"], match, sep = " & ")
+        gores[term, "association"] <- paste(gores[term, "association"],
+                                            match, sep = " & ")
       }
     }
   }
